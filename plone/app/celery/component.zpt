@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<component 
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    prefix="plone.app.celery.config"
+    tal:define="view options/view"
+    >
+
+  <import package="ZConfig.components.basic" file="mapping.xml"/>
+
+  <sectiontype name=""
+      tal:repeat="sectiontype view/sectiontypes"
+      tal:attributes="name sectiontype/name;
+                      datatype sectiontype/datatype|nothing;
+                      keytype sectiontype/keytype|nothing;
+                      implements sectiontype/implements|nothing;
+                      extends sectiontype/extends|nothing;
+                     ">
+    <tal:keys repeat="key python:view.keys(sectiontype['namespace'])"
+    ><metal:option_template define-macro="key"
+      ><section
+          name="*"
+          tal:condition="python:key['element'] == 'section'"
+          tal:attributes="type key/type|nothing;
+                          attribute key/name;"
+        ></section
+      ><key
+          name="" datatype=""
+          tal:condition="python:key['element'] == 'key'"
+          tal:attributes="name key/name;
+                          attribute key/attribute|nothing;
+                          datatype key/datatype;
+                          default key/default|nothing"
+      /><multikey
+          name="" datatype=""
+          tal:condition="python:key['element'] == 'multikey'"
+          tal:attributes="name key/name;
+                          datatype key/datatype;
+                          attribute key/attribute|nothing;">
+          <default tal:repeat="d key/default" tal:content="d" />
+      </multikey
+    ></metal:option_template
+    ></tal:keys>
+  </sectiontype>
+</component>
